@@ -1,1 +1,115 @@
-{"@context": 'https://schema.org', '@type': 'Movie', 'url': 'https://kinopoisk.ru/film/397667/', 'name': 'Остров проклятых', 'alternativeHeadline': 'Shutter Island', 'alternateName': 'Shutter Island', 'description': 'Два американских судебных пристава отправляются на один из островов в штате Массачусетс, чтобы расследовать исчезновение пациентки клиники для умалишенных преступников. При проведении расследования им придется столкнуться с паутиной лжи, обрушившимся ураганом и смертельным бунтом обитателей клиники.', 'aggregateRating': {'@type': 'AggregateRating', 'bestRating': 10, 'ratingValue': 8.544, 'ratingCount': 1159039}, 'image': 'https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/617303b7-cfa7-4273-bd1d-63974bf68927/600x900', 'genre': ['триллер', 'детектив', 'драма'], 'contentRating': 'MPAA R', 'isFamilyFriendly': False, 'producer': [{'@type': 'Person', 'name': 'Брэдли Дж. Фишер', 'url': '/name/32667'}, {'@type': 'Person', 'name': 'Майк Медавой', 'url': '/name/6314'}, {'@type': 'Person', 'name': 'Мартин Скорсезе', 'url': '/name/10988'}, {'@type': 'Person', 'name': 'Крис Бригэм', 'url': '/name/8438'}], 'director': [{'@type': 'Person', 'name': 'Мартин Скорсезе', 'url': '/name/10988'}], 'actor': [{'@type': 'Person', 'name': 'Леонардо ДиКаприо', 'url': '/name/37859'}, {'@type': 'Person', 'name': 'Марк Руффало', 'url': '/name/10467'}, {'@type': 'Person', 'name': 'Бен Кингсли', 'url': '/name/6846'}, {'@type': 'Person', 'name': 'Макс фон Сюдов', 'url': '/name/3311'}, {'@type': 'Person', 'name': 'Мишель Уильямс', 'url': '/name/1433'}, {'@type': 'Person', 'name': 'Эмили Мортимер', 'url': '/name/7038'}, {'@type': 'Person', 'name': 'Патриша Кларксон', 'url': '/name/3420'}, {'@type': 'Person', 'name': 'Джеки Эрл Хейли', 'url': '/name/111409'}, {'@type': 'Person', 'name': 'Тед Левайн', 'url': '/name/532'}, {'@type': 'Person', 'name': 'Джон Кэрролл Линч', 'url': '/name/20908'}], 'countryOfOrigin': ['США'], 'timeRequired': '138', 'datePublished': '2009', 'video': {'@type': 'VideoObject', 'name': 'Остров проклятых', 'alternativeHeadline': 'Shutter Island', 'alternateName': 'Shutter Island', 'description': 'Два американских судебных пристава отправляются на один из островов в штате Массачусетс, чтобы расследовать исчезновение пациентки клиники для умалишенных преступников. При проведении расследования им придется столкнуться с паутиной лжи, обрушившимся ураганом и смертельным бунтом обитателей клиники.', 'contentRating': 'MPAA R', 'genre': ['триллер', 'детектив', 'драма'], 'aggregateRating': {'@type': 'AggregateRating', 'bestRating': 10, 'ratingValue': 8.544, 'ratingCount': 1159039}, 'url': 'https://kinopoisk.ru/film/397667/', 'duration': 'T2H18M00S', 'producer': [{'@type': 'Person', 'name': 'Брэдли Дж. Фишер', 'url': '/name/32667'}, {'@type': 'Person', 'name': 'Майк Медавой', 'url': '/name/6314'}, {'@type': 'Person', 'name': 'Мартин Скорсезе', 'url': '/name/10988'}, {'@type': 'Person', 'name': 'Крис Бригэм', 'url': '/name/8438'}], 'director': [{'@type': 'Person', 'name': 'Мартин Скорсезе', 'url': '/name/10988'}], 'actor': [{'@type': 'Person', 'name': 'Леонардо ДиКаприо', 'url': '/name/37859'}, {'@type': 'Person', 'name': 'Марк Руффало', 'url': '/name/10467'}, {'@type': 'Person', 'name': 'Бен Кингсли', 'url': '/name/6846'}, {'@type': 'Person', 'name': 'Макс фон Сюдов', 'url': '/name/3311'}, {'@type': 'Person', 'name': 'Мишель Уильямс', 'url': '/name/1433'}, {'@type': 'Person', 'name': 'Эмили Мортимер', 'url': '/name/7038'}, {'@type': 'Person', 'name': 'Патриша Кларксон', 'url': '/name/3420'}, {'@type': 'Person', 'name': 'Джеки Эрл Хейли', 'url': '/name/111409'}, {'@type': 'Person', 'name': 'Тед Левайн', 'url': '/name/532'}, {'@type': 'Person', 'name': 'Джон Кэрролл Линч', 'url': '/name/20908'}], 'isFamilyFriendly': False, 'thumbnailUrl': 'https://avatars.mds.yandex.net/get-kinopoisk-image/4303601/617303b7-cfa7-4273-bd1d-63974bf68927/816x459', 'uploadDate': '2009', 'contentUrl': 'https://strm.yandex.ru/vod/vh-ottenc-converted/vod-content/4d7834d3b2cbd37284449d6f6b281a23/15013188x1728702939x5ed5934d-a329-4aa0-bb23-eb510d168ae7/kaltura/hls_clear_sdr_hd_avc_aac_fafa480fa60739e1bc2e9e92a899b74f/4d7834d3b2cbd37284449d6f6b281a23/ysign1=97d33183dff7b303f135368199000dc51996e76d43bdd0131541022b83b666b8,abcID=1358,from=ott-kp,pfx,sfx,ts=67b84653/master.m3u8?max_res_height=1080&amp;ottsession=7c6f1cd4db2c450892f536ada2a0c459'}}
+{
+  "@context": "https://schema.org",
+  "@type": "Movie",
+  "url": "https://kinopoisk.ru/film/263531/",
+  "name": "\u041c\u0441\u0442\u0438\u0442\u0435\u043b\u0438",
+  "alternativeHeadline": "The Avengers",
+  "alternateName": "The Avengers",
+  "description": "\u041b\u043e\u043a\u0438, \u0441\u0432\u043e\u0434\u043d\u044b\u0439 \u0431\u0440\u0430\u0442 \u0422\u043e\u0440\u0430, \u0432\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442\u0441\u044f, \u0438 \u0432 \u044d\u0442\u043e\u0442 \u0440\u0430\u0437 \u043e\u043d \u043d\u0435 \u043e\u0434\u0438\u043d. \u0417\u0435\u043c\u043b\u044f \u043e\u043a\u0430\u0437\u044b\u0432\u0430\u0435\u0442\u0441\u044f \u043d\u0430 \u0433\u0440\u0430\u043d\u0438 \u043f\u043e\u0440\u0430\u0431\u043e\u0449\u0435\u043d\u0438\u044f, \u0438 \u0442\u043e\u043b\u044c\u043a\u043e \u043b\u0443\u0447\u0448\u0438\u0435 \u0438\u0437 \u043b\u0443\u0447\u0448\u0438\u0445 \u043c\u043e\u0433\u0443\u0442 \u0441\u043f\u0430\u0441\u0442\u0438 \u0447\u0435\u043b\u043e\u0432\u0435\u0447\u0435\u0441\u0442\u0432\u043e. \u0413\u043b\u0430\u0432\u0430 \u043c\u0435\u0436\u0434\u0443\u043d\u0430\u0440\u043e\u0434\u043d\u043e\u0439 \u043e\u0440\u0433\u0430\u043d\u0438\u0437\u0430\u0446\u0438\u0438 \u0429.\u0418.\u0422. \u041d\u0438\u043a \u0424\u044c\u044e\u0440\u0438 \u0441\u043e\u0431\u0438\u0440\u0430\u0435\u0442 \u0432\u044b\u0434\u0430\u044e\u0449\u0438\u0445\u0441\u044f \u043f\u043e\u0431\u043e\u0440\u043d\u0438\u043a\u043e\u0432 \u0441\u043f\u0440\u0430\u0432\u0435\u0434\u043b\u0438\u0432\u043e\u0441\u0442\u0438 \u0438 \u0434\u043e\u0431\u0440\u0430, \u0447\u0442\u043e\u0431\u044b \u043e\u0442\u0440\u0430\u0437\u0438\u0442\u044c \u0430\u0442\u0430\u043a\u0443. \u041f\u043e\u0434 \u043f\u0440\u0435\u0434\u0432\u043e\u0434\u0438\u0442\u0435\u043b\u044c\u0441\u0442\u0432\u043e\u043c \u041a\u0430\u043f\u0438\u0442\u0430\u043d\u0430 \u0410\u043c\u0435\u0440\u0438\u043a\u0438 \u0416\u0435\u043b\u0435\u0437\u043d\u044b\u0439 \u0427\u0435\u043b\u043e\u0432\u0435\u043a, \u0422\u043e\u0440, \u041d\u0435\u0432\u0435\u0440\u043e\u044f\u0442\u043d\u044b\u0439 \u0425\u0430\u043b\u043a, \u0421\u043e\u043a\u043e\u043b\u0438\u043d\u044b\u0439 \u0413\u043b\u0430\u0437 \u0438 \u0427\u0451\u0440\u043d\u0430\u044f \u0412\u0434\u043e\u0432\u0430 \u0432\u0441\u0442\u0443\u043f\u0430\u044e\u0442 \u0432 \u0432\u043e\u0439\u043d\u0443 \u0441 \u0437\u0430\u0445\u0432\u0430\u0442\u0447\u0438\u043a\u043e\u043c.",
+  "aggregateRating": {
+    "@type": "AggregateRating",
+    "bestRating": 10,
+    "ratingValue": 7.893,
+    "ratingCount": 719801
+  },
+  "image": "https://avatars.mds.yandex.net/get-kinopoisk-image/1898899/972b7f43-9677-40ce-a9bc-02a88ad3919d/600x900",
+  "genre": [
+    "\u0444\u0430\u043d\u0442\u0430\u0441\u0442\u0438\u043a\u0430",
+    "\u0431\u043e\u0435\u0432\u0438\u043a",
+    "\u0444\u044d\u043d\u0442\u0435\u0437\u0438",
+    "\u043f\u0440\u0438\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f"
+  ],
+  "award": [
+    "\u041f\u0440\u0435\u043c\u0438\u044f \u043a\u0430\u043d\u0430\u043b\u0430 \u00abMTV\u00bb",
+    "\u041f\u0440\u0435\u043c\u0438\u044f \u043a\u0430\u043d\u0430\u043b\u0430 \u00abMTV\u00bb",
+    "\u041f\u0440\u0435\u043c\u0438\u044f \u043a\u0430\u043d\u0430\u043b\u0430 \u00abMTV\u00bb"
+  ],
+  "contentRating": "MPAA PG-13",
+  "isFamilyFriendly": true,
+  "producer": [
+    {
+      "@type": "Person",
+      "name": "\u041a\u0435\u0432\u0438\u043d \u0424\u0430\u0439\u0433\u0438",
+      "url": "/name/8283"
+    },
+    {
+      "@type": "Person",
+      "name": "\u0412\u0438\u043a\u0442\u043e\u0440\u0438\u044f \u0410\u043b\u043e\u043d\u0441\u043e",
+      "url": "/name/55053"
+    },
+    {
+      "@type": "Person",
+      "name": "\u041b\u0443\u0438\u0441 \u0414\u2019\u042d\u0441\u043f\u043e\u0437\u0438\u0442\u043e",
+      "url": "/name/30360"
+    },
+    {
+      "@type": "Person",
+      "name": "\u0414\u0436\u043e\u043d \u0424\u0430\u0432\u0440\u043e",
+      "url": "/name/9559"
+    }
+  ],
+  "director": [
+    {
+      "@type": "Person",
+      "name": "\u0414\u0436\u043e\u0441\u0441 \u0423\u0438\u0434\u043e\u043d",
+      "url": "/name/178"
+    }
+  ],
+  "actor": [
+    {
+      "@type": "Person",
+      "name": "\u0420\u043e\u0431\u0435\u0440\u0442 \u0414\u0430\u0443\u043d\u0438 \u043c\u043b.",
+      "url": "/name/10096"
+    },
+    {
+      "@type": "Person",
+      "name": "\u041a\u0440\u0438\u0441 \u042d\u0432\u0430\u043d\u0441",
+      "url": "/name/49627"
+    },
+    {
+      "@type": "Person",
+      "name": "\u041c\u0430\u0440\u043a \u0420\u0443\u0444\u0444\u0430\u043b\u043e",
+      "url": "/name/10467"
+    },
+    {
+      "@type": "Person",
+      "name": "\u041a\u0440\u0438\u0441 \u0425\u0435\u043c\u0441\u0432\u043e\u0440\u0442",
+      "url": "/name/1300401"
+    },
+    {
+      "@type": "Person",
+      "name": "\u0421\u043a\u0430\u0440\u043b\u0435\u0442\u0442 \u0419\u043e\u0445\u0430\u043d\u0441\u0441\u043e\u043d",
+      "url": "/name/3903"
+    },
+    {
+      "@type": "Person",
+      "name": "\u0414\u0436\u0435\u0440\u0435\u043c\u0438 \u0420\u0435\u043d\u043d\u0435\u0440",
+      "url": "/name/5468"
+    },
+    {
+      "@type": "Person",
+      "name": "\u0422\u043e\u043c \u0425\u0438\u0434\u0434\u043b\u0441\u0442\u043e\u043d",
+      "url": "/name/553143"
+    },
+    {
+      "@type": "Person",
+      "name": "\u0421\u044d\u043c\u044e\u044d\u043b \u041b. \u0414\u0436\u0435\u043a\u0441\u043e\u043d",
+      "url": "/name/7164"
+    },
+    {
+      "@type": "Person",
+      "name": "\u041a\u043b\u0430\u0440\u043a \u0413\u0440\u0435\u0433\u0433",
+      "url": "/name/11536"
+    },
+    {
+      "@type": "Person",
+      "name": "\u041a\u043e\u0431\u0438 \u0421\u043c\u043e\u043b\u0434\u0435\u0440\u0441",
+      "url": "/name/554916"
+    }
+  ],
+  "countryOfOrigin": [
+    "\u0421\u0428\u0410"
+  ],
+  "timeRequired": "137",
+  "datePublished": "2012"
+}

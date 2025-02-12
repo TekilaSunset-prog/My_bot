@@ -582,3 +582,5 @@ def wish_processing():
         json.dump(gen, ff, indent=2)
 
     return data
+
+print(game_info(games_href('sex')))

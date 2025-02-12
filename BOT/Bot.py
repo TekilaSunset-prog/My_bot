@@ -7,7 +7,7 @@ from aiogram.types import Message
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from Config import TOKEN, my_help
-from Bot.Steam.Functions import *
+from Steam.Functions import *
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)

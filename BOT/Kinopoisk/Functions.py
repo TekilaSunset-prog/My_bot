@@ -14,6 +14,8 @@ def movie_href(movie_name):
 
     soup = BeautifulSoup(response.text, 'lxml')
     html = soup.find('p', class_='name')
+    if html is None:
+        return False
 
     name = html.text
     if 'сериал' in name:
@@ -41,10 +43,12 @@ def movie_href(movie_name):
                             if flag is True:
                                 href += html[index1]
     href = href.replace('film', category)
-    return href + '/?utm_referrer=www.kinopoisk.ru', category
+    return href + '/?utm_referrer=www.kinopoisk.ru'
 
 
-def movie_info(datas):
+def movie_info(url):
+    if url is False:
+        return 'Ошибка'
     headers = {
     'accept': 'application/json, text/plain, */*',
     'accept-language': 'ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7',
@@ -63,33 +67,92 @@ def movie_info(datas):
     'x-request-id': '1739255300393287-555800689866559812:1',
     'x-requested-with': 'XMLHttpRequest'
     }
-    schablon = 'https://www.kinopoisk.ru/'
     payload = {}
-    url = datas[0]
 
     response = requests.request("GET", url, headers=headers, data=payload, json=True)
     response.raise_for_status()
-
     soup = BeautifulSoup(response.text, 'lxml')
+
     data = soup.find('script', type="application/ld+json").text
     data = json.loads(data)
 
     name = data.get('name')
-    category = datas[1]
+    if name is None:
+        name = 'Отсутствует'
+
     description = data.get('description')
+    if description is None:
+        description = 'Не найдено'
 
     dict_data = data.get('aggregateRating')
-    best_rating = dict_data.get('bestRating')
     rating = dict_data.get('ratingValue')
     rating_count = dict_data.get('ratingCount')
+    if dict_data is None:
+        all_rating = 'Отсутствует'
+    else:
+        all_rating = f'- Количество отзывов: {rating_count}\n- Оценка зрителей: {rating}/10'
 
-    genres = data.get('genre')
-    genres = '\n'.join(genres)
+    try:
+        genres = ''
+        genres_sp = data.get('genre')
+        for genre in genres_sp:
+            genres += '- ' + genre + '\n'
+    except AttributeError:
+        genres = 'Отсутствует'
+
+
     content_rating = data.get('contentRating')
-    family = str(data.get('isFamilyFriendly')).replace('False', 'Не подходит для семейного просмотра').replace('True', 'Подходит для семейного просмотра')
+    if content_rating is None:
+        content_rating = 'Отсутствует'
+
+    try:
+        family = str(data.get('isFamilyFriendly')).replace('False', 'Не подходит для семейного просмотра').replace('True', 'Подходит для семейного просмотра')
+    except AttributeError:
+        family = 'Отсутствует'
+
+    sp = soup.find_all('div', class_="styles_titleDark___tfMR styles_title__b1HVo")
+
+    producers = ''
+    for prod in sp:
+        if 'Продюсер' in prod.text:
+            producers += prod.findNext().text + '\n'
+
+    director = ''
+    for i in sp:
+        if 'Режиссер' in i.text:
+            director = i.findNext().text
+    if not director:
+        director = 'Не найден'
+
+    actors = ''
+    sp = soup.find_all('li', class_='styles_root__vKDSE styles_rootInLight__EFZzH')
+    for actor in sp:
+        actors += '- ' + actor.text + '\n'
+    if actors == '':
+        actors = 'Не найдены'
+
+    time = data.get('timeRequired')
+    if time is None:
+        time = 'Не найдено'
+    else:
+        if int(time) >= 60:
+            time = f'{int(time) // 60}ч. {int(time) % 60}мин.'
+        else:
+            time += 'мин.'
+
+    data_published = data.get('datePublished')
+    if data_published is None:
+        data_published = 'Не найдено'
+
+    return (f'Название:\n{name}\n\n'
+            f'Описание:\n{description}\n\n'
+            f'Рейтинг:\n{all_rating}\n\n'
+            f'Жанры:\n{genres}\n'
+            f'Возрастной рейтинг:\n{content_rating}\n\n'
+            f'Режиссер:\n{director}\n\n'
+            f''
+            f'{family}'
+            )
 
 
-    return genres
-
-
-print(movie_info(movie_href('сверх')))
+print(movie_info(movie_href('Человек слон')))

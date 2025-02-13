@@ -46,7 +46,7 @@ def movie_href(movie_name):
     return href + '/?utm_referrer=www.kinopoisk.ru'
 
 
-def movie_info(url):
+def movie_info(url, length=None):
     if url is False:
         return 'Ошибка'
     headers = {
@@ -111,7 +111,11 @@ def movie_info(url):
         family = 'Отсутствует'
 
     sp = soup.find_all('div', class_="styles_titleDark___tfMR styles_title__b1HVo")
-
+    imdb = soup.find('span', class_='styles_valueSection__0Tcsy')
+    if imdb is None:
+        imdb = 'Не найдена'
+    else:
+        imdb = imdb.text
     producers = ''
     for prod in sp:
         if 'Продюсер' in prod.text:
@@ -132,11 +136,12 @@ def movie_info(url):
         actors = 'Не найдены'
 
     time = data.get('timeRequired')
+    time1 = time
     if time is None:
         time = 'Не найдено'
     else:
         if int(time) >= 60:
-            time = f'{int(time) // 60}ч. {int(time) % 60}мин.'
+            time = f'{int(time) // 60}ч. {int(time) % 60} мин.'
         else:
             time += 'мин.'
 
@@ -144,15 +149,26 @@ def movie_info(url):
     if data_published is None:
         data_published = 'Не найдено'
 
-    return (f'Название:\n{name}\n\n'
+    short = (f'Название:\n{name}\n\n'
+     f'Длительность:\n{time1} мин. = {time}\n\n'
+     f'Рейтинг {imdb}\n\n'
+     f'Жанры:\n{genres}\n')
+
+    if length is True:
+        return (f'Название:\n{name}\n\n'
             f'Описание:\n{description}\n\n'
-            f'Рейтинг:\n{all_rating}\n\n'
-            f'Жанры:\n{genres}\n'
+            f'Длительность:\n{time1} мин. = {time}\n\n'
+            f'Дата выхода:\n{data_published}г.\n\n'
+            f'Рейтинг зрителей:\n{all_rating}\n\n'
+            f'Рейтинг {imdb}\n\n'
             f'Возрастной рейтинг:\n{content_rating}\n\n'
+            f'Жанры:\n{genres}\n'
             f'Режиссер:\n{director}\n\n'
-            f''
-            f'{family}'
-            )
+            f'Продюсеры:\n{producers}\n'
+            f'Актеры:\n{actors}\n'
+            f'{family}')
+
+    return short
 
 
-print(movie_info(movie_href('Человек слон')))
+print(movie_info(movie_href('time')))

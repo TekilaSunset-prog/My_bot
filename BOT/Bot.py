@@ -4,15 +4,20 @@ import asyncio
 from aiogram import Dispatcher, Bot
 from aiogram.filters import Command
 from aiogram.types import Message
+from aiogram.utils.keyboard import InlineKeyboardBuilder
+from aiogram import types
+
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from Config import TOKEN, my_help
 from Steam.Functions import *
+from Kinopoisk.Functions import *
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 scheduler = AsyncIOScheduler()
+
 
 # 1. Steam
 
@@ -39,7 +44,7 @@ async def info1(message: Message):
         else:
             await bot.delete_message(chat_id, msg.message_id)
             msg = await message.reply('Собираем данные об игре...')
-            info = game_info(href)
+            info = game_info(href)[0]
             await bot.delete_message(chat_id, msg.message_id)
             await message.reply(href)
             await message.reply(info)
@@ -113,6 +118,34 @@ async def send_wish():
             final_text += f'{i}. {text}'
         await bot.send_message(chat_id=int(key), text=final_text)
     await bot.send_message(chat_id=5651350400, text=f'Обработано {str(q)} игр\n{games}')
+
+
+# 2. Kinopoisk
+
+@dp.message(Command('movie'))
+async def movie(message: Message):
+    messag = message.text.replace('/movie', '')
+    chat_id = message.chat.id
+    if messag == '':
+        await message.reply('Введите название картины')
+    else:
+        msg = await message.reply('Ищем...')
+        url = movie_href(messag)
+        if url is None or url == '':
+            await bot.delete_message(chat_id, msg.message_id)
+            await message.reply('Кино не найдено. Убедитесь, что правильно ввели его название')
+        else:
+            await bot.delete_message(chat_id, msg.message_id)
+            msg = await message.reply('Собираем данные о кино...')
+            info = movie_info(url)
+            await bot.delete_message(chat_id, msg.message_id)
+
+            builder = InlineKeyboardBuilder()
+            builder.add(types.InlineKeyboardButton(
+                text="Полная информация", callback_data=movie_info(url, True)))
+            print(builder)
+            await message.reply(url)
+            await message.reply(info, reply_markup=builder.as_markup())
 
 
 async def main():

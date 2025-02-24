@@ -1,19 +1,17 @@
-import logging
 import asyncio
 
 from aiogram import Dispatcher, Bot
 from aiogram.filters import Command
-from aiogram.types import Message
-from aiogram.utils.keyboard import InlineKeyboardBuilder
-from aiogram import types
+from aiogram.types import Message, CallbackQuery
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from Config import TOKEN, my_help
-from Steam.Functions import *
+from Config import *
+from Kinopoisk.Buttons import *
 from Kinopoisk.Functions import *
+from Steam.Functions import *
 
-logging.basicConfig(level=logging.INFO)
+
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 scheduler = AsyncIOScheduler()
@@ -23,7 +21,7 @@ scheduler = AsyncIOScheduler()
 
 @dp.message(Command('help'))
 async def myhelp(message: Message):
-    await message.reply(my_help)
+    await message.answer('Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.')
 
 
 @dp.message(Command('game'))
@@ -138,14 +136,37 @@ async def movie(message: Message):
             await bot.delete_message(chat_id, msg.message_id)
             msg = await message.reply('Собираем данные о кино...')
             info = movie_info(url)
+            print(len(url.replace('?utm_referrer=www.kinopoisk.ru', '')))
             await bot.delete_message(chat_id, msg.message_id)
+            await message.reply(text=info, reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '')))
 
-            builder = InlineKeyboardBuilder()
-            builder.add(types.InlineKeyboardButton(
-                text="Полная информация", callback_data=movie_info(url, True)))
-            print(builder)
-            await message.reply(url)
-            await message.reply(info, reply_markup=builder.as_markup())
+
+@dp.callback_query(lambda x: 'short_info' in x.data)
+async def button_url(callback: CallbackQuery):
+    mess = str(callback.data).replace('short_info', '')
+    info = movie_info(mess)
+    if callback.message.text != info:
+        await callback.message.edit_text(info, reply_markup=callback.message.reply_markup)
+    await callback.answer('Загружена краткая информация')
+
+
+@dp.callback_query(lambda x: 'full_info' in x.data)
+async def button_full(callback: CallbackQuery):
+    mess = str(callback.data).replace('full_info', '')
+    if 'Режиссер:' not in callback.message.text and 'Продюсеры:' not in callback.message.text:
+        await callback.message.edit_text(
+            text=movie_info(mess, length=True),
+            reply_markup=callback.message.reply_markup
+        )
+    await callback.answer('Загружена полная информация')
+
+
+@dp.callback_query(lambda x: 'url' in x.data)
+async def button_url(callback: CallbackQuery):
+    mess = str(callback.data).replace('url', '')
+    if callback.message.text != mess:
+        await callback.message.edit_text(mess, reply_markup=callback.message.reply_markup)
+    await callback.answer('Ссылка отправлена')
 
 
 async def main():

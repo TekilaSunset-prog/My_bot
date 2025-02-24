@@ -149,11 +149,9 @@ def movie_info(url, length=None):
     if data_published is None:
         data_published = 'Не найдено'
 
-    short = (f'Название:\n{name}\n\n'
-     f'Длительность:\n{time1} мин. = {time}\n\n'
-     f'Рейтинг {imdb}\n\n'
-     f'Жанры:\n{genres}\n')
-
+    image = soup.find('a', class_='styles_posterLink__C1HRc')
+    print(image.get('data-tid'))
+    return image
     if length is True:
         return (f'Название:\n{name}\n\n'
             f'Описание:\n{description}\n\n'
@@ -168,7 +166,10 @@ def movie_info(url, length=None):
             f'Актеры:\n{actors}\n'
             f'{family}')
 
-    return short
+    return (f'Название:\n{name}\n\n'
+     f'Длительность:\n{time1} мин. = {time}\n\n'
+     f'Рейтинг {imdb}\n\n'
+     f'Жанры:\n{genres}\n'
+     f'{family}')
 
-
-print(movie_info(movie_href('time')))
+print(movie_info(movie_href('Слоник')))

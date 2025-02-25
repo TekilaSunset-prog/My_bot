@@ -224,7 +224,7 @@ def game_info(url, only_name=None, only_price=None):
     if early_access != '':
         price_text = 'Цены нет\n\n'
 
-    information = ['Информация об игре:\n',
+    information = [
                    f'{early_access}\n',
                    f'Название: {name}\n\n',
                    f'{price_text}',
@@ -232,7 +232,8 @@ def game_info(url, only_name=None, only_price=None):
                    f'Недавние обзоры: {reviews_recent1}\n',
                    f'Обзоры за все время: {reviews_of_all_time1}\n\n',
                    f'Минимальные системные требования: {system_requirement_min}\n',
-                   f'Рекомендованные системные требования: {system_requirement_recommended}']
+                   f'Рекомендованные системные требования: {system_requirement_recommended}'
+    ]
     return ''.join(information)
 
 
@@ -435,7 +436,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
     empty = False
     chat_id = str(chat_id)
 
-    with open('Steam/FILES/wishlist.json', 'r') as f:
+    with open('steam/files/wishlist.json', 'r') as f:
         new_dic = {'information': {str(chat_id): [name]}}
 
         try:
@@ -446,7 +447,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
     if json_input is True:
         if empty is True:
             json.dumps(new_dic)
-            with open('Steam/FILES/wishlist.json', 'w') as ff:
+            with open('steam/files/wishlist.json', 'w') as ff:
                 json.dump(new_dic, ff, indent=2)
             return f'{name} успешно добавлена в ваш список желаемого'
 
@@ -460,7 +461,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
                 gen = {'information': info}
                 json.dumps(gen)
 
-                with open('Steam/FILES/wishlist.json', 'w') as fff:
+                with open('steam/files/wishlist.json', 'w') as fff:
                     json.dump(gen, fff, indent=2)
 
                 return f'{name} успешно добавлена в ваш список желаемого'
@@ -479,7 +480,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
                     gen = {'information': info}
                     json.dumps(gen)
 
-                    with open('Steam/FILES/wishlist.json', 'w') as ff:
+                    with open('steam/files/wishlist.json', 'w') as ff:
                         json.dump(gen, ff, indent=2)
 
                     return f'{name} успешно добавлена в ваш список желаемого'
@@ -529,7 +530,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
         gen = {'information': info}
         json.dumps(gen)
 
-        with open('Steam/FILES/wishlist.json', 'w') as fff:
+        with open('steam/files/wishlist.json', 'w') as fff:
             json.dump(gen, fff, indent=2)
 
         if name != 'all':
@@ -541,7 +542,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
 
 def wish_processing():
     data = {}
-    with open('Steam/FILES/wishlist.json', 'r') as f:
+    with open('steam/files/wishlist.json', 'r') as f:
         try:
             data_json = json.load(f)
         except JSONDecodeError:
@@ -578,7 +579,7 @@ def wish_processing():
     gen = {'information': new_info}
     json.dumps(gen)
 
-    with open('Steam/FILES/wishlist.json', 'w') as ff:
+    with open('steam/files/wishlist.json', 'w') as ff:
         json.dump(gen, ff, indent=2)
 
     return data

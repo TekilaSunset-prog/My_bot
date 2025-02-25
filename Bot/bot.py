@@ -1,23 +1,24 @@
 import asyncio
+import logging
 
 from aiogram import Dispatcher, Bot
 from aiogram.filters import Command
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message, CallbackQuery, FSInputFile
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from Config import *
-from Kinopoisk.Buttons import *
-from Kinopoisk.Functions import *
-from Steam.Functions import *
+from config import *
+from kinopoisk.buttons import *
+from kinopoisk.functions import *
+from steam.functions import *
 
-
+logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
 dp = Dispatcher()
 scheduler = AsyncIOScheduler()
 
 
-# 1. Steam
+# 1. steam
 
 @dp.message(Command('help'))
 async def myhelp(message: Message):
@@ -42,7 +43,7 @@ async def info1(message: Message):
         else:
             await bot.delete_message(chat_id, msg.message_id)
             msg = await message.reply('Собираем данные об игре...')
-            info = game_info(href)[0]
+            info = game_info(href)
             await bot.delete_message(chat_id, msg.message_id)
             await message.reply(href)
             await message.reply(info)
@@ -118,47 +119,50 @@ async def send_wish():
     await bot.send_message(chat_id=5651350400, text=f'Обработано {str(q)} игр\n{games}')
 
 
-# 2. Kinopoisk
+# 2. kinopoisk
 
 @dp.message(Command('movie'))
 async def movie(message: Message):
-    messag = message.text.replace('/movie', '')
+    mess = message.text.replace('/movie', '')
     chat_id = message.chat.id
-    if messag == '':
+    if mess == '':
         await message.reply('Введите название картины')
     else:
         msg = await message.reply('Ищем...')
-        url = movie_href(messag)
-        if url is None or url == '':
+        inf = movie_href(mess)
+        if inf is False:
             await bot.delete_message(chat_id, msg.message_id)
-            await message.reply('Кино не найдено. Убедитесь, что правильно ввели его название')
+            await message.reply('Кино не найдено. Убедитесь, что правильно ввели название')
         else:
+            url = inf[0]
+            category = inf[1]
             await bot.delete_message(chat_id, msg.message_id)
             msg = await message.reply('Собираем данные о кино...')
-            info = movie_info(url)
-            print(len(url.replace('?utm_referrer=www.kinopoisk.ru', '')))
+            info = movie_info(url, category)
+            file = FSInputFile(f'kinopoisk/images/{info[2]}')
             await bot.delete_message(chat_id, msg.message_id)
-            await message.reply(text=info, reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '')))
+            await message.answer_photo(file)
+            await message.reply(text=info[0], reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '') + category))
 
 
-@dp.callback_query(lambda x: 'short_info' in x.data)
+@dp.callback_query(lambda x: 'len_' in x.data)
 async def button_url(callback: CallbackQuery):
-    mess = str(callback.data).replace('short_info', '')
-    info = movie_info(mess)
-    if callback.message.text != info:
-        await callback.message.edit_text(info, reply_markup=callback.message.reply_markup)
-    await callback.answer('Загружена краткая информация')
+    mess = str(callback.data).replace('len_', '')
 
+    if 'film_' in mess:
+        mess = mess.replace('film_', '')
+        category = 'film_'
+    else:
+        mess = mess.replace('series_', '')
+        category = 'series_'
 
-@dp.callback_query(lambda x: 'full_info' in x.data)
-async def button_full(callback: CallbackQuery):
-    mess = str(callback.data).replace('full_info', '')
-    if 'Режиссер:' not in callback.message.text and 'Продюсеры:' not in callback.message.text:
-        await callback.message.edit_text(
-            text=movie_info(mess, length=True),
-            reply_markup=callback.message.reply_markup
-        )
-    await callback.answer('Загружена полная информация')
+    info = movie_info(mess, category)
+    if callback.message.text == info[0]:
+        await callback.message.edit_text(info[1], reply_markup=callback.message.reply_markup)
+        await callback.answer('Загружена полная информация')
+    else:
+        await callback.message.edit_text(info[0], reply_markup=callback.message.reply_markup)
+        await callback.answer('Загружена краткая информация')
 
 
 @dp.callback_query(lambda x: 'url' in x.data)

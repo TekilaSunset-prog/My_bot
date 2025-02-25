@@ -208,6 +208,3 @@ def movie_info(url, category):
             f'Возраст: {ages.text}\n\n'
             f'{family}'),
             f'{name}.png')
-
-
-print(movie_info(movie_href('пророк')[0], movie_href('пророк')[1]))

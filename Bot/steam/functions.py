@@ -1,4 +1,5 @@
 import json
+import os
 from json import JSONDecodeError
 
 import requests
@@ -174,15 +175,6 @@ def game_info(url, only_name=None, only_price=None):
     soup_dls = BeautifulSoup(response_dls.text, 'lxml')
     dlcs = soup_dls.find_all('span', class_="color_created")
 
-    try:
-        system_requirement_min = soup.find('ul').text.replace('Minimum:', '')
-    except IndexError:
-        system_requirement_min = 'Не найдены'
-    try:
-        system_requirement_recommended = soup.find_all('ul')[2].text.replace('Recommended:', '')
-    except IndexError:
-        system_requirement_recommended = 'Не найдены'
-
     reviews_of_all_time = soup.find_all('div', class_="summary column")[1].text.strip('\n')
     reviews_recent = soup.find_all('div', class_="summary column")[0].text.strip('\n')
     reviews_recent1 = ''
@@ -211,30 +203,56 @@ def game_info(url, only_name=None, only_price=None):
         reviews_recent1 = 'Нет обзоров'
 
     ind = -1
-    dlcs1 = 'DLC: '
+    dlcs1 = 'DLC: \n'
     for item in dlcs:
         ind += 1
         item = item.text
         if item != ' ':
             dlcs1 += item + '\n'
 
-    if len(dlcs1) == 5:
+    if len(dlcs1) == 6:
         dlcs1 = 'DLC для этой игры нет'
 
     if early_access != '':
         price_text = 'Цены нет\n\n'
 
-    information = [
-                   f'{early_access}\n',
-                   f'Название: {name}\n\n',
-                   f'{price_text}',
-                   f'{dlcs1}\n\n',
-                   f'Недавние обзоры: {reviews_recent1}\n',
-                   f'Обзоры за все время: {reviews_of_all_time1}\n\n',
-                   f'Минимальные системные требования: {system_requirement_min}\n',
-                   f'Рекомендованные системные требования: {system_requirement_recommended}'
-    ]
-    return ''.join(information)
+    dev = soup.find('div', id="developers_list").text.strip()
+    pub = soup.find_all('div', class_='dev_row')[1].text.replace('\n', '').replace('Publisher:', '')
+
+    data_pub = soup.find('div', class_="date").text.replace('Coming soon', '')
+
+    image = str(soup.find('div', class_="game_header_image_ctn"))
+    flag = False
+    href = ''
+    for index in range(len(image)):
+        if flag:
+            break
+        if image[index] == 's':
+            if image[index + 1] == 'r':
+                if image[index + 2] == 'c':
+                    if image[index + 3] == '=':
+                        for index1 in range(index + 5, len(image)):
+                            flag = True
+                            if image[index1] == '"':
+                                break
+                            if flag is True:
+                                href += image[index1]
+
+    if not f'{name}.png' in os.listdir('steam/images'):
+        res = requests.get(href)
+        with open(f'steam/images/{name}.png', 'wb') as f:
+            f.write(res.content)
+
+    return (f'{early_access}\n'
+            f'Название: {name}\n\n'
+            f'Дата выхода: {data_pub}\n\n'
+            f'{price_text}'
+            f'Разработчик: {dev}\n'
+            f'Издатель: {pub}\n\n'
+            f'Недавние обзоры: {reviews_recent1}\n'
+            f'Обзоры за все время: {reviews_of_all_time1}\n\n'
+            f'{dlcs1}'
+            )
 
 
 def user_info(user_id):
@@ -436,7 +454,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
     empty = False
     chat_id = str(chat_id)
 
-    with open('steam/files/wishlist.json', 'r') as f:
+    with open('steam/jsons/wishlist.json', 'r') as f:
         new_dic = {'information': {str(chat_id): [name]}}
 
         try:
@@ -447,7 +465,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
     if json_input is True:
         if empty is True:
             json.dumps(new_dic)
-            with open('steam/files/wishlist.json', 'w') as ff:
+            with open('steam/jsons/wishlist.json', 'w') as ff:
                 json.dump(new_dic, ff, indent=2)
             return f'{name} успешно добавлена в ваш список желаемого'
 
@@ -461,7 +479,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
                 gen = {'information': info}
                 json.dumps(gen)
 
-                with open('steam/files/wishlist.json', 'w') as fff:
+                with open('steam/jsons/wishlist.json', 'w') as fff:
                     json.dump(gen, fff, indent=2)
 
                 return f'{name} успешно добавлена в ваш список желаемого'
@@ -480,7 +498,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
                     gen = {'information': info}
                     json.dumps(gen)
 
-                    with open('steam/files/wishlist.json', 'w') as ff:
+                    with open('steam/jsons/wishlist.json', 'w') as ff:
                         json.dump(gen, ff, indent=2)
 
                     return f'{name} успешно добавлена в ваш список желаемого'
@@ -530,7 +548,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
         gen = {'information': info}
         json.dumps(gen)
 
-        with open('steam/files/wishlist.json', 'w') as fff:
+        with open('steam/jsons/wishlist.json', 'w') as fff:
             json.dump(gen, fff, indent=2)
 
         if name != 'all':
@@ -542,7 +560,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
 
 def wish_processing():
     data = {}
-    with open('steam/files/wishlist.json', 'r') as f:
+    with open('steam/jsons/wishlist.json', 'r') as f:
         try:
             data_json = json.load(f)
         except JSONDecodeError:
@@ -579,7 +597,7 @@ def wish_processing():
     gen = {'information': new_info}
     json.dumps(gen)
 
-    with open('steam/files/wishlist.json', 'w') as ff:
+    with open('steam/jsons/wishlist.json', 'w') as ff:
         json.dump(gen, ff, indent=2)
 
     return data

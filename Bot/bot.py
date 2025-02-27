@@ -8,9 +8,9 @@ from aiogram.types import Message, CallbackQuery, FSInputFile
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from config import *
-from kinopoisk.buttons import *
 from kinopoisk.functions import *
 from steam.functions import *
+from buttons import *
 
 logging.basicConfig(level=logging.INFO)
 bot = Bot(token=TOKEN)
@@ -18,11 +18,29 @@ dp = Dispatcher()
 scheduler = AsyncIOScheduler()
 
 
-# 1. steam
-
+# 1. Steam
 @dp.message(Command('help'))
 async def myhelp(message: Message):
-    await message.answer('Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.')
+    await message.answer('Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.', reply_markup=add_help_button(al=True))
+
+
+@dp.callback_query(lambda x: x.data == 'back')
+async def help_steam(callback: CallbackQuery):
+    await callback.message.edit_text(text='Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.', reply_markup=add_help_button(al=True))
+
+
+@dp.callback_query(lambda x: x.data == 'steam')
+async def help_steam(callback: CallbackQuery):
+    if '/game' not in callback.message.text:
+        await callback.message.edit_text(text=steam, reply_markup=add_help_button(back=True))
+    await callback.answer(text='Steam')
+
+
+@dp.callback_query(lambda x: x.data == 'kinopoisk')
+async def help_steam(callback: CallbackQuery):
+    if '/movie' not in callback.message.text:
+        await callback.message.edit_text(text=kinopoisk, reply_markup=add_help_button(back=True))
+    await callback.answer(text='Kinopoisk')
 
 
 @dp.message(Command('game'))
@@ -35,18 +53,25 @@ async def info1(message: Message):
         await message.reply('Введите название игры')
     else:
         msg = await message.reply('Ищем игру...')
-        href = games_href(mess)
+        url = games_href(mess)
 
-        if href is None or href == '':
+        if url is None or url == '':
             await bot.delete_message(chat_id, msg.message_id)
             await message.reply('Игра не найдена. Убедитесь, что правильно ввели ее название')
         else:
             await bot.delete_message(chat_id, msg.message_id)
             msg = await message.reply('Собираем данные об игре...')
-            info = game_info(href)
+            info = game_info(url)
+            name = game_info(url, only_name=True)
             await bot.delete_message(chat_id, msg.message_id)
-            await message.reply(href)
-            await message.reply(info)
+            file = FSInputFile(f'steam/images/{name}.png')
+            await message.answer_photo(file)
+            await message.reply(info, reply_markup=add_game_button(url))
+
+
+@dp.callback_query(lambda x: 'game_url' in x.data)
+async def button_url_game():
+    pass
 
 
 @dp.message(Command('user'))
@@ -119,8 +144,7 @@ async def send_wish():
     await bot.send_message(chat_id=5651350400, text=f'Обработано {str(q)} игр\n{games}')
 
 
-# 2. kinopoisk
-
+# 2. Kinopoisk
 @dp.message(Command('movie'))
 async def movie(message: Message):
     mess = message.text.replace('/movie', '')
@@ -145,9 +169,9 @@ async def movie(message: Message):
             await message.reply(text=info[0], reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '') + category))
 
 
-@dp.callback_query(lambda x: 'len_' in x.data)
+@dp.callback_query(lambda x: 'len_movie' in x.data)
 async def button_url(callback: CallbackQuery):
-    mess = str(callback.data).replace('len_', '')
+    mess = str(callback.data).replace('len_movie', '')
 
     if 'film_' in mess:
         mess = mess.replace('film_', '')
@@ -157,7 +181,7 @@ async def button_url(callback: CallbackQuery):
         category = 'series_'
 
     info = movie_info(mess, category)
-    if callback.message.text == info[0]:
+    if callback.message.text.strip() == info[0].strip():
         await callback.message.edit_text(info[1], reply_markup=callback.message.reply_markup)
         await callback.answer('Загружена полная информация')
     else:
@@ -166,12 +190,8 @@ async def button_url(callback: CallbackQuery):
 
 
 @dp.callback_query(lambda x: 'url' in x.data)
-async def button_url(callback: CallbackQuery):
-    mess = str(callback.data).replace('url', '')
-    if callback.message.text != mess:
-        await callback.message.edit_text(mess, reply_markup=callback.message.reply_markup)
-    await callback.answer('Ссылка отправлена')
-
+async def button_url():
+    pass
 
 async def main():
     scheduler.add_job(send_wish, 'cron', minute=0, hour=0)

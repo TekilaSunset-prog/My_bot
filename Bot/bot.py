@@ -166,7 +166,7 @@ async def movie(message: Message):
             file = FSInputFile(f'kinopoisk/images/{info[2]}')
             await bot.delete_message(chat_id, msg.message_id)
             await message.answer_photo(file)
-            await message.reply(text=info[0], reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '') + category))
+            await message.reply(text=info[0], reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '') + category, full=True))
 
 
 @dp.callback_query(lambda x: 'len_movie' in x.data)
@@ -182,10 +182,10 @@ async def button_url(callback: CallbackQuery):
 
     info = movie_info(mess, category)
     if callback.message.text.strip() == info[0].strip():
-        await callback.message.edit_text(info[1], reply_markup=callback.message.reply_markup)
+        await callback.message.edit_text(info[1], reply_markup=add_movie_button(mess + category, short=True))
         await callback.answer('Загружена полная информация')
     else:
-        await callback.message.edit_text(info[0], reply_markup=callback.message.reply_markup)
+        await callback.message.edit_text(info[0], reply_markup=add_movie_button(mess + category, full=True))
         await callback.answer('Загружена краткая информация')
 
 

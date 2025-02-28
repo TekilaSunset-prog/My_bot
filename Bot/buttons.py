@@ -1,10 +1,14 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-def add_movie_button(redact):
-    len_info = InlineKeyboardButton(text='Изменить количество информации', callback_data=f'{redact}len_movie')
-    url = InlineKeyboardButton(text='Ссылка', callback_data=f'{redact}url', url=redact)
-    return InlineKeyboardMarkup(inline_keyboard=[[len_info], [url]])
+def add_movie_button(redact, full=False, short=False):
+    full_info = InlineKeyboardButton(text='Полная информация', callback_data=f'{redact}len_movie')
+    short_info = InlineKeyboardButton(text='Краткая информация', callback_data=f'{redact}len_movie')
+    url = InlineKeyboardButton(text='Ссылка', callback_data=f'{redact}url', url=redact.replace('film_', '').replace('series_', ''))
+    if full:
+        return InlineKeyboardMarkup(inline_keyboard=[[full_info], [url]])
+    if short:
+        return InlineKeyboardMarkup(inline_keyboard=[[short_info], [url]])
 
 
 def add_game_button(redact):

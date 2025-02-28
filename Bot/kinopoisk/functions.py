@@ -46,7 +46,8 @@ def movie_href(movie_name):
                                 href += html[index1]
     if category == 'series_':
         href = href.replace('film', 'series')
-
+    if 'name' in href:
+        return False
     return href + '/?utm_referrer=www.kinopoisk.ru', category
 
 
@@ -175,27 +176,28 @@ def movie_info(url, category):
         image = str(soup.find('a', class_='styles_posterLink__C1HRc'))
         flag = False
         href = 'https:'
-        for index in range(len(image)):
-            if flag:
-                break
-            if image[index] == 's':
-                if image[index + 1] == 'r':
-                    if image[index + 2] == 'c':
-                        if image[index + 3] == '=':
-                            for index1 in range(index + 5, len(image)):
-                                flag = True
-                                if image[index1] == '"':
-                                    break
-                                if flag is True:
-                                    href += image[index1]
 
         if not f'{name}.png' in os.listdir('kinopoisk/images'):
+            for index in range(len(image)):
+                if flag:
+                    break
+                if image[index] == 's':
+                    if image[index + 1] == 'r':
+                        if image[index + 2] == 'c':
+                            if image[index + 3] == '=':
+                                for index1 in range(index + 5, len(image)):
+                                    flag = True
+                                    if image[index1] == '"':
+                                        break
+                                    if flag is True:
+                                        href += image[index1]
             res = requests.get(href)
             with open(f'kinopoisk/images/{name}.png', 'wb') as f:
                 f.write(res.content)
 
         return ((f'Название:\n{name}\n\n'
             f'Длительность:\n{all_time}\n\n'
+            f'Рейтинг Kinopoisk:\n{all_rating}\n\n'
             f'Рейтинг {imdb}\n\n'
             f'Жанры:\n{genres}\n'
             f'Возраст: {ages.text}\n\n'
@@ -204,7 +206,7 @@ def movie_info(url, category):
             f'Описание:\n{description}\n\n'
             f'Длительность:\n{all_time}\n\n'
             f'Дата выхода:\n{data_published}г.\n\n'
-            f'Рейтинг зрителей:\n{all_rating}\n\n'
+            f'Рейтинг Kinopoisk:\n{all_rating}\n\n'
             f'Рейтинг {imdb}\n\n'
             f'Возрастной рейтинг:\n{content_rating}\n\n'
             f'Жанры:\n{genres}\n'
@@ -312,34 +314,38 @@ def movie_info(url, category):
         image = str(soup.find('a', class_='styles_posterLink__C1HRc'))
         flag = False
         href = ''
-        for index in range(len(image)):
-            if flag:
-                break
-            if image[index] == 's':
-                if image[index + 1] == 'r':
-                    if image[index + 2] == 'c':
-                        if image[index + 3] == '=':
-                            for index1 in range(index + 5, len(image)):
-                                flag = True
-                                if image[index1] == '"':
-                                    break
-                                if flag is True:
-                                    href += image[index1]
 
         if not f'{name}.png' in os.listdir('kinopoisk/images'):
-            res = requests.get(href)
+            for index in range(len(image)):
+                if flag:
+                    break
+                if image[index] == 's':
+                    if image[index + 1] == 'r':
+                        if image[index + 2] == 'c':
+                            if image[index + 3] == '=':
+                                for index1 in range(index + 5, len(image)):
+                                    flag = True
+                                    if image[index1] == '"':
+                                        break
+                                    if flag is True:
+                                        href += image[index1]
+            if href[:8] != 'https:':
+                res = requests.get('https:' + href)
+            else:
+                res = requests.get(href)
             with open(f'kinopoisk/images/{name}.png', 'wb') as f:
                 f.write(res.content)
 
         return ((f'Название:\n{name}\n\n'
                  f'Длительность серии:\n{time}\n\n'
+                 f'Рейтинг Kinopoisk:\n{rating_kinopoisk}\n\n'
                  f'Рейтинг {imdb}\n\n'
                  f'Жанры:\n{genres}\n\n'
                  f'Возраст: {ages}\n\n'),
                 (f'Название:\n{name}\n\n'
                  f'Длительность серии:\n{time}\n\n'
                  f'Дата выхода:\n{data_published}г.\n\n'
-                 f'Рейтинг kinopoisk: {rating_kinopoisk}\n\n'
+                 f'Рейтинг Kinopoisk: {rating_kinopoisk}\n\n'
                  f'Рейтинг {imdb}\n\n'
                  f'Жанры:\n{genres}\n\n'
                  f'Режиссер:\n{directors}\n\n'

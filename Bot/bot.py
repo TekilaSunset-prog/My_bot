@@ -166,48 +166,44 @@ async def movie(message: Message):
             msg = await message.reply('Собираем данные о кино...')
             info = movie_info(url, category)
             name = info[2].replace('.png', '')
-            file = FSInputFile(f'kinopoisk/images/{info[2]}')
-            await bot.delete_message(chat_id, msg.message_id)
-            await message.answer_photo(file, caption=info[0], reply_markup=add_movie_button(url.replace('?utm_referrer=www.kinopoisk.ru', '') + f'name{name}', full=True))
-
-            with open('kinopoisk/jsons/info.json', 'r') as f:
-                try:
-                    json_data = json.load(f)
-                except JSONDecodeError:
-                    empty = True
-            if empty:
-                gen = json_data.update({name: [info[0], info[1]]})
+            if movie_href(name) is False:
+                await bot.delete_message(chat_id, msg.message_id)
+                await message.reply('Кино не найдено. Убедитесь, что правильно ввели название')
             else:
-                gen = {name: [info[0], info[1]]}
-            json.dumps(gen)
-            with open('kinopoisk/jsons/info.json', 'w') as ff:
-                json.dump(gen, ff, indent=2)
+                file = FSInputFile(f'kinopoisk/images/{info[2]}')
+                await bot.delete_message(chat_id, msg.message_id)
+                await message.answer_photo(file, caption=info[0], reply_markup=add_movie_button(f'{name}', full=True))
+
+                with open('kinopoisk/jsons/info.json', 'r') as f:
+                    try:
+                        json_data = json.load(f)
+                    except JSONDecodeError:
+                        empty = True
+                if not empty:
+                    json_data.update({name: [info[0], info[1]]})
+                else:
+                    json_data = {name: [info[0], info[1]]}
+                json.dumps(json_data)
+                with open('kinopoisk/jsons/info.json', 'w') as ff:
+                    json.dump(json_data, ff, indent=2)
 
 
 @dp.callback_query(lambda x: 'len_movie' in x.data)
 async def button_url(callback: CallbackQuery):
-    mess = str(callback.data)
-    name = ''
-    for index in range(len(mess)):
-        if mess[index] == 'n':
-            if mess[index + 1] == 'a':
-                if mess[index + 2] == 'm':
-                    if mess[index + 3] == 'e':
-                        for index1 in range(index + 4, len(mess)):
-                            name += mess[index1]
+    name = str(callback.data).replace('len_movie', '')
+
     with open('kinopoisk/jsons/info.json', 'r') as f:
         data = json.load(f)
     info = data.get(name)
-
     id1 = callback.inline_message_id
     if callback.message.caption.strip() == info[0].strip():
-        await callback.message.edit_caption(inline_message_id=id1, caption=info[1], reply_markup=add_movie_button(mess + name, short=True))
+        await callback.message.edit_caption(inline_message_id=id1, caption=info[1], reply_markup=add_movie_button(name, short=True))
     else:
-        await callback.message.edit_caption(inline_message_id=id1, caption=info[0], reply_markup=add_movie_button(mess + name, full=True))
+        await callback.message.edit_caption(inline_message_id=id1, caption=info[0], reply_markup=add_movie_button(name, full=True))
 
 
 
-@dp.callback_query(lambda x: 'url' in x.data)
+@dp.callback_query(lambda x: x.data == 'url')
 async def button_url():
     pass
 

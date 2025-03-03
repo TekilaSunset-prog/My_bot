@@ -111,14 +111,13 @@ def movie_info(url, category):
 
         imdb = soup.find('span', class_='styles_valueSection__0Tcsy')
         if imdb is None:
-            imdb = 'Не найдена'
+            imdb = 'IMDb: Не найден'
         else:
             imdb = imdb.text
 
         sp = soup.find_all('div', class_="styles_titleDark___tfMR styles_title__b1HVo")
         if sp is None:
             director = 'Не найден'
-            actors = 'Не найдены\n'
             producers = 'Не найдены\n'
         else:
             if len(sp) == 0:
@@ -140,38 +139,26 @@ def movie_info(url, category):
             if not producers:
                 producers = 'Не найдены\n'
 
-            sp = soup.find('ul', class_='styles_list___ufg4').text
-            actors = ''
-            i = 0
-            actor = '- '
-
-            for symbol in sp:
-                if symbol.isupper():
-                    i += 1
-                if i == 3:
-                    actors += actor + '\n'
-                    actor = '- '
-                    i = 1
-                actor += symbol
-
         time = data.get('timeRequired')
         time1 = time
         if time is None:
             all_time = 'Не найдено'
         else:
             if int(time) >= 60:
-                time = f'{int(time) // 60}ч. {int(time) % 60} мин.'
+                time = f' = {int(time) // 60}ч. {int(time) % 60} мин.'
             else:
-                time += 'мин.'
-            all_time = f'{time1} мин. = {time}'
+                time = ''
+            all_time = f'{time1} мин.{time}'
 
-        data_published = data.get('datePublished')
+        data_published = data.get('datePublished') + 'г.'
         if data_published is None:
             data_published = 'Не найдена'
 
         ages = soup.find('a', class_="styles_restrictionLink__iy4n9")
         if ages is None:
             ages = 'Не найден'
+        else:
+            ages = ages.text
 
         image = str(soup.find('a', class_='styles_posterLink__C1HRc'))
         flag = False
@@ -195,25 +182,29 @@ def movie_info(url, category):
             with open(f'kinopoisk/images/{name}.png', 'wb') as f:
                 f.write(res.content)
 
+        all_description = f'Описание:\n{description}\n\n'
+
+        if len(all_description) >= 500:
+            all_description = ''
+
         return ((f'Название:\n{name}\n\n'
             f'Длительность:\n{all_time}\n\n'
             f'Рейтинг Kinopoisk:\n{all_rating}\n\n'
             f'Рейтинг {imdb}\n\n'
             f'Жанры:\n{genres}\n'
-            f'Возраст: {ages.text}\n\n'
+            f'Возраст: {ages}\n\n'
             f'{family}'),
             (f'Название:\n{name}\n\n'
-            f'Описание:\n{description}\n\n'
+            f'{all_description}'
             f'Длительность:\n{all_time}\n\n'
-            f'Дата выхода:\n{data_published}г.\n\n'
+            f'Дата выхода:\n{data_published}\n\n'
             f'Рейтинг Kinopoisk:\n{all_rating}\n\n'
             f'Рейтинг {imdb}\n\n'
             f'Возрастной рейтинг:\n{content_rating}\n\n'
             f'Жанры:\n{genres}\n'
             f'Режиссер:\n{director}\n\n'
             f'Продюсеры:\n{producers}\n'
-            f'Актеры:\n{actors}\n'
-            f'Возраст: {ages.text}\n\n'
+            f'Возраст: {ages}\n\n'
             f'{family}'),
             f'{name}.png')
 
@@ -243,113 +234,216 @@ def movie_info(url, category):
 
         name = soup.find('h1', class_="styles_title___itJ6 styles_root__QSToS styles_root__5sqsd styles_rootInLight__juoEZ")
 
-        years = soup.find('span', class_="styles_brackets__zRUuj")
-        if years is None:
-            years = ''
-        else:
-            years = years.text
-        name = name.text.replace(' ' + years, '')
-
-        info = soup.find_all('div', class_="styles_valueDark__BCk93 styles_value__g6yP4")
-        genres = ''
-        directors = ''
-        producers = ''
-        time = ''
-        data_published = ''
-
-        for i in info:
-            if i.previous.text == 'Режиссер':
-                directors = i.text
-            if i.previous.text == 'Продюсер':
-                producers = i.text
-            if i.previous.text == 'Время серии':
-                time = i.text
-            if i.previous.text == 'Премьера в мире':
-                data_published = i.text
-            if i.previous.previous.text == 'Жанр':
-                genres = i.text
-
-        if not genres:
-            genres = 'Не найдены'
-        if not directors:
-            directors = 'Не найдены'
-        if not producers:
-            producers = 'Не найдены'
-        if not time:
-            time = 'Неизвестно'
-
-        imdb = soup.find('span', class_='styles_valueSection__0Tcsy')
-        if imdb is None:
-            imdb = 'Не найдена'
-        else:
-            imdb = imdb.text
-
-        rating_kinopoisk = soup.find('span', class_="styles_ratingKpTop__84afd")
-        if rating_kinopoisk is None:
-            rating_kinopoisk = 'Не найден'
-
-        sp = soup.find('ul', class_="styles_list___ufg4")
-        if sp is None:
-            actors = 'Не найдены'
-        else:
-            actors = ''
-            i = 0
-            actor = '- '
-
-            for symbol in sp.text:
-                if symbol.isupper():
-                    i += 1
-                if i == 3:
-                    actors += actor + '\n'
-                    actor = '- '
-                    i = 1
-                actor += symbol
-
-        ages = soup.find('span', class_="styles_rootHighContrast__Bevle styles_rootHighContrastInLight__513Hu")
-        if ages is None:
-            ages = 'Неизвестно'
-        else:
-            ages = ages.text
-
-        image = str(soup.find('a', class_='styles_posterLink__C1HRc'))
-        flag = False
-        href = ''
-
-        if not f'{name}.png' in os.listdir('kinopoisk/images'):
-            for index in range(len(image)):
-                if flag:
-                    break
-                if image[index] == 's':
-                    if image[index + 1] == 'r':
-                        if image[index + 2] == 'c':
-                            if image[index + 3] == '=':
-                                for index1 in range(index + 5, len(image)):
-                                    flag = True
-                                    if image[index1] == '"':
-                                        break
-                                    if flag is True:
-                                        href += image[index1]
-            if href[:8] != 'https:':
-                res = requests.get('https:' + href)
+        if name is not None:
+            years = soup.find('span', class_="styles_brackets__zRUuj")
+            if years is None:
+                years = ''
             else:
-                res = requests.get(href)
-            with open(f'kinopoisk/images/{name}.png', 'wb') as f:
-                f.write(res.content)
+                years = years.text
+            name = name.text.replace(' ' + years, '')
 
-        return ((f'Название:\n{name}\n\n'
-                 f'Длительность серии:\n{time}\n\n'
-                 f'Рейтинг Kinopoisk:\n{rating_kinopoisk}\n\n'
-                 f'Рейтинг {imdb}\n\n'
-                 f'Жанры:\n{genres}\n\n'
-                 f'Возраст: {ages}\n\n'),
-                (f'Название:\n{name}\n\n'
-                 f'Длительность серии:\n{time}\n\n'
-                 f'Дата выхода:\n{data_published}г.\n\n'
-                 f'Рейтинг Kinopoisk: {rating_kinopoisk}\n\n'
-                 f'Рейтинг {imdb}\n\n'
-                 f'Жанры:\n{genres}\n\n'
-                 f'Режиссер:\n{directors}\n\n'
-                 f'Продюсеры:\n{producers}\n\n'
-                 f'Актеры:\n{actors}\n'
-                 f'Возраст: {ages}\n\n'),
-                 f'{name}.png')
+            info = soup.find_all('div', class_="styles_valueDark__BCk93 styles_value__g6yP4")
+            directors = ''
+            producers = ''
+            time = ''
+            data_published = ''
+
+            for i in info:
+                if i.previous.text == 'Режиссер':
+                    directors = i.text
+                if i.previous.text == 'Продюсер':
+                    producers = i.text
+                if i.previous.text == 'Время серии':
+                    time = i.text
+                if i.previous.text == 'Премьера в мире':
+                    data_published = i.text + 'г.'
+
+            if not data_published:
+                data_published = 'Не найдена'
+            if not directors:
+                directors = 'Не найдены'
+            if not producers:
+                producers = 'Не найдены'
+            if not time:
+                time = 'Неизвестно'
+
+            imdb = soup.find('span', class_='styles_valueSection__0Tcsy')
+            if imdb is None:
+                imdb = 'IMDb: Не найден'
+            else:
+                imdb = imdb.text
+
+            rating_kinopoisk = soup.find('span', class_="styles_ratingKpTop__84afd")
+            if rating_kinopoisk is None:
+                rating_kinopoisk = 'Не найден'
+            else:
+                rating_kinopoisk = rating_kinopoisk.text
+
+            ages = soup.find('span', class_="styles_rootHighContrast__Bevle styles_rootHighContrastInLight__513Hu")
+            if ages is None:
+                ages = 'Неизвестно'
+            else:
+                ages = ages.text
+
+            image = str(soup.find('a', class_='styles_posterLink__C1HRc'))
+            flag = False
+            href = ''
+
+            if not f'{name}.png' in os.listdir('kinopoisk/images'):
+                for index in range(len(image)):
+                    if flag:
+                        break
+                    if image[index] == 's':
+                        if image[index + 1] == 'r':
+                            if image[index + 2] == 'c':
+                                if image[index + 3] == '=':
+                                    for index1 in range(index + 5, len(image)):
+                                        flag = True
+                                        if image[index1] == '"':
+                                            break
+                                        if flag is True:
+                                            href += image[index1]
+
+                if href[:6] != 'https:':
+                    if 'https:' + href == 'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg':
+                        res = requests.get('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQNaQ6cGpNOxZKlyhx2Fv15E6gPBlR8KzKug&s')
+                    else:
+                        res = requests.get('https:' + href)
+                else:
+                    if href == 'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg':
+                        res = requests.get('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQNaQ6cGpNOxZKlyhx2Fv15E6gPBlR8KzKug&s')
+                    else:
+                        res = requests.get(href)
+                with open(f'kinopoisk/images/{name}.png', 'wb') as f:
+                    f.write(res.content)
+
+            description = soup.find('p', class_='styles_paragraph__wEGPz')
+            if description is None:
+                all_description = 'Описание не найдено'
+            else:
+                description = description.text
+                if len(description) >= 500:
+                    all_description = ''
+                else:
+                    all_description = f'Описание:\n{description}\n\n'
+
+            return ((f'Название:\n{name}\n\n'
+                     f'Длительность серии:\n{time}\n\n'
+                     f'Рейтинг Kinopoisk:\n{rating_kinopoisk}\n\n'
+                     f'Рейтинг {imdb}\n\n'
+                     f'Возраст: {ages}\n\n'),
+                    (f'Название:\n{name}\n\n'
+                     f'{all_description}'
+                     f'Длительность серии:\n{time}\n\n'
+                     f'Дата выхода:\n{data_published}\n\n'
+                     f'Рейтинг Kinopoisk: {rating_kinopoisk}\n\n'
+                     f'Рейтинг {imdb}\n\n'
+                     f'Режиссер:\n{directors}\n\n'
+                     f'Продюсеры:\n{producers}\n\n'
+                     f'Возраст: {ages}\n\n'),
+                    f'{name}.png')
+
+        else:
+            name = soup.find('h1', class_='styles_title___itJ6 styles_root__QSToS styles_root__5sqsd styles_rootInDark__SZlor')
+            years = soup.find('span', class_="styles_brackets__zRUuj")
+            if years is None:
+                years = ''
+            else:
+                years = years.text
+            name = name.text.replace(' ' + years, '')
+
+            info = soup.find_all('div', class_="styles_rowLight__P8Y_1 styles_row__da_RK")
+
+            directors = ''
+            producers = ''
+            ages = ''
+            data_published = ''
+            time = ''
+
+            for i in info:
+                if 'Режиссер' in i.text:
+                    directors = i.text.replace('Режиссер', '')
+                if 'Продюсер' in i.text:
+                    producers = i.text.replace('Продюсер', '')
+                if 'Возраст' in i.text:
+                    ages = i.text.replace('Возраст', '')
+                if 'Премьера в мире' in i.text:
+                    data_published = i.text.replace('Премьера в мире', '').replace(', ...', '') + 'г.'
+                if 'Время серии' in i.text:
+                    time = i.text.replace('Время серии', '')
+
+            if not directors:
+                directors = 'Не найдены'
+            if not producers:
+                producers = 'Не найдены'
+            if not time:
+                time = 'Неизвестно'
+
+            imdb = soup.find('span', class_='styles_valueSection__0Tcsy')
+            if imdb is None:
+                imdb = 'IMDb: Не найден'
+            else:
+                imdb = imdb.text
+
+            rating_kinopoisk = soup.find('span', class_="styles_ratingKpTop__84afd")
+            if rating_kinopoisk is None:
+                rating_kinopoisk = 'Не найден'
+            else:
+                rating_kinopoisk = rating_kinopoisk.text
+
+            image = str(soup.find('a', class_='styles_posterLink__C1HRc'))
+            flag = False
+            href = ''
+
+            if not f'{name}.png' in os.listdir('kinopoisk/images'):
+                for index in range(len(image)):
+                    if flag:
+                        break
+                    if image[index] == 's':
+                        if image[index + 1] == 'r':
+                            if image[index + 2] == 'c':
+                                if image[index + 3] == '=':
+                                    for index1 in range(index + 5, len(image)):
+                                        flag = True
+                                        if image[index1] == '"':
+                                            break
+                                        if flag is True:
+                                            href += image[index1]
+                if href[:6] != 'https:':
+                    if 'https:' + href == 'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg':
+                        res = requests.get('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQNaQ6cGpNOxZKlyhx2Fv15E6gPBlR8KzKug&s')
+                    else:
+                        res = requests.get('https:' + href)
+                else:
+                    if href == 'https://yastatic.net/s3/kinopoisk-frontend/common-static/img/projector-logo/placeholder.svg':
+                        res = requests.get('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQNaQ6cGpNOxZKlyhx2Fv15E6gPBlR8KzKug&s')
+                    else:
+                        res = requests.get(href)
+                with open(f'kinopoisk/images/{name}.png', 'wb') as f:
+                    f.write(res.content)
+
+            description = soup.find('p', class_='styles_paragraph__wEGPz')
+            if description is None:
+                all_description = 'Описание не найдено'
+            else:
+                description = description.text
+                if len(description) >= 500:
+                    all_description = ''
+                else:
+                    all_description = f'Описание:\n{description}\n\n'
+
+            return ((f'Название:\n{name}\n\n'
+                     f'Длительность серии:\n{time}\n\n'
+                     f'Рейтинг Kinopoisk:\n{rating_kinopoisk}\n\n'
+                     f'Рейтинг {imdb}\n\n'
+                     f'Возраст: {ages}\n\n'),
+                    (f'Название:\n{name}\n\n'
+                     f'{all_description}'
+                     f'Длительность серии:\n{time}\n\n'
+                     f'Дата выхода:\n{data_published}\n\n'
+                     f'Рейтинг Kinopoisk: {rating_kinopoisk}\n\n'
+                     f'Рейтинг {imdb}\n\n'
+                     f'Режиссер:\n{directors}\n\n'
+                     f'Продюсеры:\n{producers}\n\n'
+                     f'Возраст: {ages}\n\n'),
+                    f'{name}.png')

@@ -1,10 +1,11 @@
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
+from kinopoisk.functions import movie_href
 
 
 def add_movie_button(redact, full=False, short=False):
     full_info = InlineKeyboardButton(text='Полная информация', callback_data=f'{redact}len_movie')
     short_info = InlineKeyboardButton(text='Краткая информация', callback_data=f'{redact}len_movie')
-    url = InlineKeyboardButton(text='Ссылка', callback_data=f'{redact}url', url=redact.replace('film_', '').replace('series_', ''))
+    url = InlineKeyboardButton(text='Ссылка', callback_data='url', url=movie_href(redact)[0])
     if full:
         return InlineKeyboardMarkup(inline_keyboard=[[full_info], [url]])
     if short:

@@ -1,5 +1,4 @@
 import asyncio
-import json
 import logging
 
 from aiogram import Dispatcher, Bot
@@ -26,7 +25,7 @@ async def myhelp(message: Message):
 
 
 @dp.callback_query(lambda x: x.data == 'back')
-async def help_steam(callback: CallbackQuery):
+async def help_back(callback: CallbackQuery):
     await callback.message.edit_text(text='Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.', reply_markup=add_help_button(al=True))
 
 
@@ -38,7 +37,7 @@ async def help_steam(callback: CallbackQuery):
 
 
 @dp.callback_query(lambda x: x.data == 'kinopoisk')
-async def help_steam(callback: CallbackQuery):
+async def help_kinopoisk(callback: CallbackQuery):
     if '/movie' not in callback.message.text:
         await callback.message.edit_text(text=kinopoisk, reply_markup=add_help_button(back=True))
     await callback.answer(text='Kinopoisk')

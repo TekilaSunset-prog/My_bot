@@ -77,6 +77,7 @@ def movie_info(url, category):
         soup = BeautifulSoup(response.text, 'lxml')
 
         data = soup.find('script', type="application/ld+json").text
+
         data = json.loads(data)
 
         name = data.get('name')

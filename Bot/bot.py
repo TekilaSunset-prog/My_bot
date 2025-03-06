@@ -18,6 +18,9 @@ dp = Dispatcher()
 scheduler = AsyncIOScheduler()
 
 
+# @dp.message(Command('start'))
+
+
 # 1. Steam
 @dp.message(Command('help'))
 async def myhelp(message: Message):
@@ -171,7 +174,7 @@ async def movie(message: Message):
             else:
                 file = FSInputFile(f'kinopoisk/images/{info[2]}')
                 await bot.delete_message(chat_id, msg.message_id)
-                await message.answer_photo(file, caption=info[0], reply_markup=add_movie_button(f'{name}', full=True))
+                await message.answer_photo(file, caption=info[0], reply_markup=add_movie_button(name, full=True))
 
                 with open('kinopoisk/jsons/info.json', 'r') as f:
                     try:

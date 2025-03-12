@@ -7,11 +7,23 @@ import requests
 from bs4 import BeautifulSoup
 
 
-def games_href(game_name):
+def games_href(game_name, different_game=None):
     url = f'https://store.steampowered.com/search/?term={game_name}&category1=998&ndl=1&ignore_preferences=1'
     response = requests.get(url)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
+
+    if different_game is not None:
+        sp = soup.find_all('div', class_='responsive_search_name_combined')
+        spis = []
+        try:
+            for html in range(1, 11):
+                spis.append(sp[html].find('span', class_='title').text)
+        except IndexError:
+            if len(spis) == 0:
+                return False
+        return spis
+
     text = soup.find('div', id="search_resultsRows")
     text = str(text)
     href = ''

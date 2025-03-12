@@ -68,13 +68,31 @@ async def info1(message: Message):
             name = game_info(url, only_name=True)
             await bot.delete_message(chat_id, msg.message_id)
             file = FSInputFile(f'steam/images/{name}.png')
-            await message.answer_photo(file)
-            await message.reply(info, reply_markup=add_game_button(url))
+            await message.answer_photo(file, caption=info, reply_markup=add_game_button(url, mess))
 
 
-@dp.callback_query(lambda x: 'game_url' in x.data)
-async def button_url_game():
-    pass
+@dp.callback_query(lambda x: 'NOT FOUND GAME' in x.data)
+async def different_game(callback: CallbackQuery):
+    data = games_href(callback.data.replace('NOT FOUND GAME', ''), different_game=True)
+    print(callback.data.replace('NOT FOUND GAME', ''))
+    if data is False:
+        await callback.answer('Совпадений не найдено')
+    else:
+        await bot.delete_message(chat_id=callback.message.chat.id, message_id=callback.message.message_id)
+        text = 'Возможно вы имели ввиду:\n'
+        for index in range(len(data)):
+            text += f'{index + 1}. {data[index]}\n\n'
+        await callback.message.answer(text, reply_markup=add_game_button(li=data))
+
+
+@dp.callback_query(lambda x: 'LISTS' in x.data)
+async def lists(callback: CallbackQuery):
+    name = callback.data.replace('LISTS', '')
+    url = games_href(name)
+    info = game_info(url)
+    await bot.delete_message(callback.message.chat.id, callback.message.message_id)
+    file = FSInputFile(f'steam/images/{name}.png')
+    await callback.message.answer_photo(file, caption=info, reply_markup=add_game_button(redact=url, url_=True))
 
 
 @dp.message(Command('user'))

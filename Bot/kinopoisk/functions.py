@@ -6,7 +6,10 @@ import requests
 
 from bs4 import BeautifulSoup
 
+from Bot.log.logs import log
 
+
+@log
 def movie_href(movie_name):
     url = f'https://www.kinopoisk.ru/index.php?kp_query={movie_name}'
 
@@ -51,6 +54,7 @@ def movie_href(movie_name):
     return href + '/?utm_referrer=www.kinopoisk.ru', category
 
 
+@log
 def movie_info(url, category):
     if category == 'film_':
         headers = {

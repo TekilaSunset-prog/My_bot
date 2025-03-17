@@ -7,45 +7,44 @@ from aiogram.types import Message, CallbackQuery, FSInputFile
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from config import *
 from kinopoisk.functions import *
 from steam.functions import *
 from buttons import *
+from jsons.jsfiles import get_param
 
 logging.basicConfig(level=logging.INFO)
-bot = Bot(token=TOKEN)
+bot = Bot(token=get_param('Token'))
 dp = Dispatcher()
 scheduler = AsyncIOScheduler()
 
 
-# @dp.message(Command('start'))
-
-
-# 1. Steam
 @dp.message(Command('help'))
 async def myhelp(message: Message):
-    await message.answer('Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.', reply_markup=add_help_button(al=True))
+    await message.answer('Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.',
+                         reply_markup=add_help_button(al=True))
 
 
 @dp.callback_query(lambda x: x.data == 'back')
 async def help_back(callback: CallbackQuery):
-    await callback.message.edit_text(text='Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.', reply_markup=add_help_button(al=True))
+    await callback.message.edit_text(text='Бот умеет отправлять информацию о фильмах, сериалах, играх и т.д.',
+                                     reply_markup=add_help_button(al=True))
 
 
 @dp.callback_query(lambda x: x.data == 'steam')
 async def help_steam(callback: CallbackQuery):
     if '/game' not in callback.message.text:
-        await callback.message.edit_text(text=steam, reply_markup=add_help_button(back=True))
+        await callback.message.edit_text(text=get_param('steam'), reply_markup=add_help_button(back=True))
     await callback.answer(text='Steam')
 
 
 @dp.callback_query(lambda x: x.data == 'kinopoisk')
 async def help_kinopoisk(callback: CallbackQuery):
     if '/movie' not in callback.message.text:
-        await callback.message.edit_text(text=kinopoisk, reply_markup=add_help_button(back=True))
+        await callback.message.edit_text(text=get_param('kinopoisk'), reply_markup=add_help_button(back=True))
     await callback.answer(text='Kinopoisk')
 
 
+# 1. Steam
 @dp.message(Command('game'))
 async def info1(message: Message):
     chat_id = message.chat.id
@@ -217,15 +216,25 @@ async def button_url(callback: CallbackQuery):
     info = data.get(name)
     id1 = callback.inline_message_id
     if callback.message.caption.strip() == info[0].strip():
-        await callback.message.edit_caption(inline_message_id=id1, caption=info[1], reply_markup=add_movie_button(name, short=True))
+        await callback.message.edit_caption(inline_message_id=id1, caption=info[1],
+                                            reply_markup=add_movie_button(name, short=True))
     else:
-        await callback.message.edit_caption(inline_message_id=id1, caption=info[0], reply_markup=add_movie_button(name, full=True))
-
+        await callback.message.edit_caption(inline_message_id=id1, caption=info[0],
+                                            reply_markup=add_movie_button(name, full=True))
 
 
 @dp.callback_query(lambda x: x.data == 'url')
 async def button_url():
     pass
+
+
+# 3. Admin
+@dp.message(Command('log'))
+async def file(message: Message):
+    if message.from_user.id in get_param():
+        logs = FSInputFile('log/log.txt')
+        await message.reply_document(logs)
+
 
 async def main():
     scheduler.add_job(send_wish, 'cron', minute=0, hour=0)

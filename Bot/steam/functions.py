@@ -6,14 +6,17 @@ import requests
 
 from bs4 import BeautifulSoup
 
+from Bot.log.logs import log
 
+
+@log
 def games_href(game_name, different_game=None):
     url = f'https://store.steampowered.com/search/?term={game_name}&category1=998&ndl=1&ignore_preferences=1'
     response = requests.get(url)
     response.raise_for_status()
     soup = BeautifulSoup(response.text, 'lxml')
 
-    if different_game is not None:
+    if bool(different_game) not in [None, False]:
         sp = soup.find_all('div', class_='responsive_search_name_combined')
         spis = []
         try:
@@ -47,6 +50,7 @@ def games_href(game_name, different_game=None):
     return href
 
 
+@log
 def game_info(url, only_name=None, only_price=None):
     if url == '':
         return 'Игра не найдена. Убедитесь, что правильно ввели ее название'
@@ -267,6 +271,7 @@ def game_info(url, only_name=None, only_price=None):
             )
 
 
+@log
 def user_info(user_id):
     url = f'https://steamcommunity.com/profiles/{user_id}'
 
@@ -462,6 +467,7 @@ def user_info(user_id):
         return ''.join(all_information_about_user)
 
 
+@log
 def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None):
     empty = False
     chat_id = str(chat_id)
@@ -570,6 +576,7 @@ def wish_game(chat_id, name=None, json_input=None, json_output=None, delete=None
             return 'Список желаемого очищен'
 
 
+@log
 def wish_processing():
     data = {}
     with open('steam/jsons/wishlist.json', 'r') as f:

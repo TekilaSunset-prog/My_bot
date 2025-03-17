@@ -1,0 +1,8 @@
+Mon Mar 17 09:59:35 2025: Start "wish_game" with ((5651350400,), {'json_output': True})
+Mon Mar 17 10:04:48 2025: Start "games_href" with (('sigma',), {})
+Mon Mar 17 10:04:49 2025: Start "game_info" with (('https://store.steampowered.com/app/1654890/Sigma_Impact/?snr=1_7_7_151_150_1',), {})
+Mon Mar 17 10:04:52 2025: Start "game_info" with (('https://store.steampowered.com/app/1654890/Sigma_Impact/?snr=1_7_7_151_150_1',), {'only_name': True})
+Mon Mar 17 10:05:16 2025: Start "games_href" with (('sigma',), {'different_game': True})
+Mon Mar 17 10:05:35 2025: Start "games_href" with (('Sigma Squad',), {})
+Mon Mar 17 10:05:36 2025: Start "game_info" with (('https://store.steampowered.com/app/3249210/Sigma_Squad/?snr=1_7_7_151_150_1',), {})
+Mon Mar 17 10:05:50 2025: Start "wish_game" with ((5651350400, 'all'), {'delete': True})

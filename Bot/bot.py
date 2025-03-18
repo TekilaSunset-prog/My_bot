@@ -32,15 +32,13 @@ async def help_back(callback: CallbackQuery):
 
 @dp.callback_query(lambda x: x.data == 'steam')
 async def help_steam(callback: CallbackQuery):
-    if '/game' not in callback.message.text:
-        await callback.message.edit_text(text=get_param('steam'), reply_markup=add_help_button(back=True))
+    await callback.message.edit_text(text=get_param('steam'), reply_markup=add_help_button(back=True))
     await callback.answer(text='Steam')
 
 
 @dp.callback_query(lambda x: x.data == 'kinopoisk')
 async def help_kinopoisk(callback: CallbackQuery):
-    if '/movie' not in callback.message.text:
-        await callback.message.edit_text(text=get_param('kinopoisk'), reply_markup=add_help_button(back=True))
+    await callback.message.edit_text(text=get_param('kinopoisk'), reply_markup=add_help_button(back=True))
     await callback.answer(text='Kinopoisk')
 
 

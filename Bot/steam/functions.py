@@ -200,12 +200,15 @@ def game_info(url, only_name=None, only_price=None):
         if reviews_recent[letter] == '-':
             for letter2 in range(letter + 2, len(reviews_recent)):
                 reviews_recent1 += reviews_recent[letter2]
+
     for letter3 in range(len(reviews_of_all_time)):
         if reviews_of_all_time[letter3] == '-':
             for letter4 in range(letter3 + 2, len(reviews_of_all_time)):
                 reviews_of_all_time1 += reviews_of_all_time[letter4]
+
     reviews_of_all_time1 = reviews_of_all_time1.replace('of the', 'из').replace(
         'user reviews for this game are positive.', 'обзоров пользователей положительные')
+
     reviews_recent1 = reviews_recent1.replace('of the', 'из').replace(
         'user reviews in the last 30 days are positive.',
         'обзоров пользователей за последние 30 дней положительные')

@@ -34,10 +34,10 @@ def add_game_button(redact=None, name=None, li=None, url_=None):
 
 
 def add_help_button(al=False, back=None):
-    back = InlineKeyboardButton(text='Назад', callback_data='back')
+    back1 = InlineKeyboardButton(text='Назад', callback_data='back')
     steam = InlineKeyboardButton(text='Steam', callback_data='steam')
     kinopoisk = InlineKeyboardButton(text='Kinopoisk', callback_data='kinopoisk')
     if al:
         return InlineKeyboardMarkup(inline_keyboard=[[steam], [kinopoisk]])
     if back:
-        return InlineKeyboardMarkup(inline_keyboard=[[back]])
+        return InlineKeyboardMarkup(inline_keyboard=[[back1]])
